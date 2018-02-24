@@ -33,11 +33,26 @@
     [self h_removeFromSuperview];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+-(void)setLimitBlock:(TextViewLimitBlock)limitBlock
+{
+    objc_setAssociatedObject(self, @selector(limitBlock), limitBlock, OBJC_ASSOCIATION_COPY);
+    
+    if (limitBlock) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewDidChange:) name:UITextViewTextDidChangeNotification object:self];
+    }
+}
+
+-(TextViewLimitBlock)limitBlock
+{
+    return objc_getAssociatedObject(self, @selector(limitBlock));
+}
+
 -(void)setMaxLenght:(NSUInteger)maxLenght
 {
     objc_setAssociatedObject(self, @selector(maxLenght), @(maxLenght), OBJC_ASSOCIATION_ASSIGN);
 
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     if (maxLenght>0) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewDidChange:) name:UITextViewTextDidChangeNotification object:self];
@@ -66,26 +81,18 @@
         if (!position) {
             
             [self textDispose];
-            
-//            if (self.limitBlock) {
-//                self.limitBlock(textField);
-//            }
+
         }
     }
     
     // 中文输入法以外的直接对其统计限制即可，不考虑其他语种情况
     else{
             [self textDispose];
-//        if (self.limitBlock) {
-//            self.limitBlock(textField);
-//        }
-        
     }
 }
 -(void)textDispose
 {
     if (self.maxLenght > 0) {
-
         if (self.text.length > self.maxLenght) {
             NSRange rg = {0,MAX(self.maxLenght,0)};
             NSString *s = @"";
@@ -116,7 +123,16 @@
                 s = trimString;
             }
             self.text = s;
+            if (self.limitBlock) {
+                self.limitBlock(self);
+            }
 
+        }
+    }
+    else
+    {
+        if (self.limitBlock) {
+            self.limitBlock(self);
         }
     }
 }

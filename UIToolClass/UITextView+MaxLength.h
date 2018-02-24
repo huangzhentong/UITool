@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
+typedef void(^TextViewLimitBlock)(UITextView *textView);
 @interface UITextView (MaxLength)
-
+@property (nonatomic,copy)TextViewLimitBlock limitBlock;
 @property(nonatomic,assign)NSUInteger maxLenght;
 @end

@@ -13,6 +13,11 @@
 
 - (void)setLimitBlock:(LimitBlock)limitBlock {
     objc_setAssociatedObject(self, @selector(limitBlock), limitBlock, OBJC_ASSOCIATION_COPY);
+    
+    if (limitBlock) {
+        [self removeTarget:self action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
+        [self addTarget:self action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
+    }
 }
 
 - (LimitBlock)limitBlock {
@@ -22,9 +27,9 @@
 -(void)setMaxLenght:(NSUInteger)maxLenght
 {
     objc_setAssociatedObject(self,@selector(maxLenght), @(maxLenght), OBJC_ASSOCIATION_ASSIGN);
-    
     [self removeTarget:self action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
     if(maxLenght>0)
+       
         [self addTarget:self action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
     
 }
@@ -34,10 +39,10 @@
     
 }
 
-- (void)lengthLimit:(LimitBlock)limit {
-    [self addTarget:self action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
-    self.limitBlock = limit;
-}
+//- (void)lengthLimit:(LimitBlock)limit {
+//    [self addTarget:self action:@selector(textFieldEditChanged:) forControlEvents:UIControlEventEditingChanged];
+//    self.limitBlock = limit;
+//}
 
 - (void)textFieldEditChanged:(UITextField *)textField {
     NSLog(@"%@",NSStringFromSelector(_cmd));
@@ -53,18 +58,14 @@
             
             [self textDispose];
             
-            if (self.limitBlock) {
-                self.limitBlock(textField);
-            }
+            
         }
     }
     
     // 中文输入法以外的直接对其统计限制即可，不考虑其他语种情况
     else{
         [self textDispose];
-        if (self.limitBlock) {
-            self.limitBlock(textField);
-        }
+        
         
     }
     
@@ -72,7 +73,6 @@
 -(void)textDispose
 {
     if (self.maxLenght > 0) {
-        
         if (self.text.length > self.maxLenght) {
             NSRange rg = {0,MAX(self.maxLenght,0)};
             NSString *s = @"";
@@ -103,7 +103,15 @@
                 s = trimString;
             }
             self.text = s;
-            
+            if (self.limitBlock) {
+                self.limitBlock(self);
+            }
+        }
+    }
+    else
+    {
+        if (self.limitBlock) {
+            self.limitBlock(self);
         }
     }
 }

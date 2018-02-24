@@ -17,7 +17,4 @@ typedef void(^LimitBlock)(UITextField *textField);
 @property (nonatomic,copy)LimitBlock limitBlock;
 @property (nonatomic,assign)NSUInteger maxLenght;                  //限制文本长度，需要的时候直接设置数值，不需要的时候直接设置为0
 
-
-- (void)lengthLimit:(LimitBlock)limit;
-
 @end
