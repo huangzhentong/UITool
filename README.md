@@ -6,3 +6,6 @@
 3.UIButton 添加 图片及文字对齐样式
 4.添加UIImage转base64
 5.添加数组及字典打印中文
+
+0.0.2版本
+1.修改UITextField跟UITextView 限制block 
