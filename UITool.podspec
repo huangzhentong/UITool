@@ -8,8 +8,7 @@ Pod::Spec.new do |s|
   s.summary      = "A short description of UITool."
 
   
-  s.description  = <<-DESC
-                   DESC
+  s.description  = "一个UI工具包"
 
   s.homepage     = "https://github.com/huangzhentong/UITool"
  
