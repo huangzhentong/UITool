@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
  
 
   s.name         = "UITool"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "A short description of UITool."
 
   
@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
   #
 
   # s.platform     = :ios
-   s.platform     = :ios, "9.0"
+   s.platform     = :ios, "7.0"
 
   #  When using multiple platforms
   # s.ios.deployment_target = "5.0"
